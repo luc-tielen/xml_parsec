@@ -1,0 +1,5 @@
+%{
+  "combine": {:hex, :combine, "0.10.0", "eff8224eeb56498a2af13011d142c5e7997a80c8f5b97c499f84c841032e429f", [:mix], [], "hexpm"},
+  "ex_parsec": {:hex, :ex_parsec, "0.2.1", "a92ebd3098ffc177b80db8e9714875049cd8b861a5132bc1c3a12787851ec3ef", [:mix], [{:monad, "~> 1.0.3", [hex: :monad, repo: "hexpm", optional: false]}], "hexpm"},
+  "monad": {:hex, :monad, "1.0.5", "bd02263a8dad0894433ca3283ebb6f71a55799e1cd17bda1e8b2ea9e14eeb9c5", [:mix], [], "hexpm"},
+}

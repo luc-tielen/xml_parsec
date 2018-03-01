@@ -19,7 +19,7 @@ defmodule XmlParsec.MixProject do
 
   defp deps do
     [
-      {:ex_parsec, "~> 0.2.1"}
+      {:combine, "~> 0.10.0"}
     ]
   end
 end
