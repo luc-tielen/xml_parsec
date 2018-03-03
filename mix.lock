@@ -1,5 +1,7 @@
 %{
   "combine": {:hex, :combine, "0.10.0", "eff8224eeb56498a2af13011d142c5e7997a80c8f5b97c499f84c841032e429f", [:mix], [], "hexpm"},
   "ex_parsec": {:hex, :ex_parsec, "0.2.1", "a92ebd3098ffc177b80db8e9714875049cd8b861a5132bc1c3a12787851ec3ef", [:mix], [{:monad, "~> 1.0.3", [hex: :monad, repo: "hexpm", optional: false]}], "hexpm"},
+  "fs": {:hex, :fs, "0.9.2", "ed17036c26c3f70ac49781ed9220a50c36775c6ca2cf8182d123b6566e49ec59", [:rebar], [], "hexpm"},
+  "mix_test_watch": {:hex, :mix_test_watch, "0.5.0", "2c322d119a4795c3431380fca2bca5afa4dc07324bd3c0b9f6b2efbdd99f5ed3", [:mix], [{:fs, "~> 0.9.1", [hex: :fs, repo: "hexpm", optional: false]}], "hexpm"},
   "monad": {:hex, :monad, "1.0.5", "bd02263a8dad0894433ca3283ebb6f71a55799e1cd17bda1e8b2ea9e14eeb9c5", [:mix], [], "hexpm"},
 }
