@@ -24,7 +24,8 @@ defmodule XML.Parser.Test do
     assert parse_string("a") == "a"
     assert parse_string("ab") == "ab"
     assert parse_string("ab<c") == "ab"
-    # TODO comment in between
+    assert parse_string("ab<!-- c -->d") == "abd"
+    assert parse_string("ab<!-- c --><!-- d -->e") == "abe"
   end
 
   test "parsing XML tag attributes" do

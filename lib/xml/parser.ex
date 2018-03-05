@@ -43,7 +43,7 @@ defmodule XML.Parser do
   end
 
   def string_parser() do
-    xml_char()
+    choice([xml_char(), ignore(comment_parser())])
     |> many()
     |> map(&Enum.join/1)
   end
