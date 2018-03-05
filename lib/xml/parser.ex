@@ -4,7 +4,7 @@ defmodule XML.Parser do
   alias XML.Tag
 
 
-  # TODO parse XML header, comments
+  # TODO parse XML header
 
   def parse(xml), do: Combine.parse(xml, xml_parser())
 
@@ -43,11 +43,12 @@ defmodule XML.Parser do
   end
 
   def string_parser() do
-    char()
-    |> none_of(["<"])
+    xml_char()
     |> many()
     |> map(&Enum.join/1)
   end
+
+  defp xml_char(), do: char() |> none_of(["<", ">", "&"])
 
   defp tag(), do: label(word_(), "tag name")
 
@@ -67,6 +68,17 @@ defmodule XML.Parser do
     |> many
     |> label("attribute value")
     |> map(&Enum.join/1)
+  end
+
+  def comment_parser() do
+    # NOTE: weird construction since no way to create 'nothing' parser?
+    close_comment = char("-") |> followed_by(string("->"))
+    comment = close_comment
+              |> if_not(xml_char())
+              |> many()
+              |> label("comment")
+    between(string("<!--"), comment, string("-->"))
+    |> map(fn results -> results |> Enum.into("") end)
   end
 
   defp between_quotes(parser) do

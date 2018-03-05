@@ -4,6 +4,21 @@ defmodule XML.Parser.Test do
   alias XML.Parser
   alias XML.Tag
 
+  test "parsing XML comments" do
+    assert parse_comment("") == {:error, "Expected `<!--`, but was not found at line 1, column 0."}
+    assert parse_comment("<!--") == {:error, "Expected `-->`, but was not found at line 1, column 4."}
+    assert parse_comment("-->") == {:error, "Expected `<!--`, but was not found at line 1, column 0."}
+    assert parse_comment("<!---->") == ""
+    assert parse_comment("<!-- -->") == " "
+    assert parse_comment("<!------->") == "---"
+    assert parse_comment("<!-- a -->") == " a "
+    assert parse_comment("<!-- ab -->") == " ab "
+    assert parse_comment("<!-- ab -->") == " ab "
+    assert parse_comment("<!-- a\nb -->") == " a\nb "
+    assert parse_comment("<!-- a<!-- b -->-->") ==
+      {:error, "Expected `-->`, but was not found at line 1, column 6."}
+  end
+
   test "parsing XML strings" do
     assert parse_string("") == ""
     assert parse_string("a") == "a"
@@ -51,6 +66,7 @@ defmodule XML.Parser.Test do
     "XML tags do not line up! Start tag: #{tag1}, end tag: #{tag2}."
   end
 
+  defp parse_comment(x), do: run_parser(x, Parser.comment_parser())
   defp parse_string(x), do: run_parser(x, Parser.string_parser())
   defp parse_attr(x), do: run_parser(x, Parser.attribute())
   defp parse_tag_no_content(x) do
