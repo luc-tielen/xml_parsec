@@ -4,6 +4,21 @@ defmodule XML.Parser.Test do
   alias XML.Parser
   alias XML.Tag
 
+
+  test "parsing XML doc header" do
+    assert parse_xml_header("") == {:error, "Expected `<?xml`, but was not found at line 1, column 0."}
+    assert parse_xml_header("<?xml?>") == {:error, "Expected `version` attribute in XML header!"}
+    assert parse_xml_header("<?xml ?>") == {:error, "Expected `version` attribute in XML header!"}
+    assert parse_xml_header("<?xml version=\"1.0\"?>") == %{"version" => "1.0"}
+    assert parse_xml_header("<?xml version=\"1.0\" ?>") == %{"version" => "1.0"}
+    assert parse_xml_header("<?xml version=\"1.0\" encoding=\"utf-8\" ?>") == %{"version" => "1.0", "encoding" => "utf-8"}
+    assert parse_xml_header("<?xml version=\"1.0\" invalid_key=\"utf-8\" ?>") == {:error, "Expected `?>`, but was not found at line 1, column 20."}
+    assert parse_xml_header("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>")
+      == %{"version" => "1.0", "encoding" => "utf-8", "standalone" => "yes"}
+    assert parse_xml_header("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>")
+      == %{"version" => "1.0", "encoding" => "utf-8", "standalone" => "no"}
+  end
+
   test "parsing XML comments" do
     assert parse_comment("") == {:error, "Expected `<!--`, but was not found at line 1, column 0."}
     assert parse_comment("<!--") == {:error, "Expected `-->`, but was not found at line 1, column 4."}
@@ -63,10 +78,9 @@ defmodule XML.Parser.Test do
                 value: %Tag{name: "tag9", attributes: %{}, value: ""}}
   end
 
-  defp xml_err(tag1, tag2) do
-    "XML tags do not line up! Start tag: #{tag1}, end tag: #{tag2}."
-  end
+  defp xml_err(tag1, tag2), do: "XML tags do not line up! Start tag: #{tag1}, end tag: #{tag2}."
 
+  defp parse_xml_header(x), do: run_parser(x, Parser.xml_header_parser())
   defp parse_comment(x), do: run_parser(x, Parser.comment_parser())
   defp parse_string(x), do: run_parser(x, Parser.string_parser())
   defp parse_attr(x), do: run_parser(x, Parser.attribute())
