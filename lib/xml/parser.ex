@@ -5,19 +5,25 @@ defmodule XML.Parser do
   alias XML.Tag
 
 
-  # TODO parse doc struct
-
   def parse(xml), do: Combine.parse(xml, xml_doc_parser())
 
   def xml_doc_parser() do
-    sequence([ignore(xml_header_parser()), xml_body_parser()])
-    |> map(fn result ->
-      result
+    sequence([skip_many(whitespace()),
+              lexeme(xml_header_parser()),
+              xml_body_parser()
+             ])
+    |> map(fn [header, body] ->
+      %Doc{
+        version: Map.get(header, "version", ""),
+        encoding: Map.get(header, "encoding", ""),
+        standalone: Map.get(header, "standalone", "yes"),
+        body: body
+      }
     end)
   end
 
   def xml_header_parser() do
-    between(string_("<?xml"), many(header_attribute()), string("?>"))
+    between(string_("<?xml"), many(header_attribute()), string_("?>"))
     |> map(fn attributes ->
       attr_map = Enum.into(attributes, %{})
       if Map.has_key?(attr_map, "version") do
@@ -29,42 +35,45 @@ defmodule XML.Parser do
   end
 
   def xml_body_parser() do
-    lazy(fn ->  # Laziness needed due to recursive nature of XML.
-      choice([ tag_no_content_parser(),
-               tag_with_content_parser(),
-               string_parser(),
-             ])
-    end)
+    choice([ tag_no_content_parser(), tag_with_content_parser()])
   end
 
+  defp tag_with_attrs(), do: sequence([tag(), many(attribute())])
+
+  defp start_tag_parser(), do: between(char("<"), tag_with_attrs(), char(">"))
+  defp end_tag_parser(), do: between(string("</"), word_(), char(">"))
+
   def tag_no_content_parser() do
-    tag_with_attrs = sequence([tag(), many(attribute())])
-    between(char("<"), tag_with_attrs, string("/>"))
+    between(char("<"), tag_with_attrs(), string("/>"))
     |> map(fn [tag, attributes] ->
       %Tag{name: tag, attributes: Enum.into(attributes, %{})}
     end)
   end
 
   def tag_with_content_parser() do
-    tag_with_attrs = sequence([tag(), many(attribute())])
-    start_tag_parser = between(char("<"), tag_with_attrs, char(">"))
-    contents_parser = xml_body_parser()
-    end_tag_parser = between(string("</"), word_(), char(">"))
-
-    sequence([start_tag_parser, contents_parser, end_tag_parser])
-    |> map(fn [[start_tag, attributes], contents, end_tag] ->
+    contents_parser = many(choice([xml_nested_parser(), string_parser()]))
+    sequence([start_tag_parser(),
+              contents_parser,
+              end_tag_parser()
+             ])
+    |> map(fn [[start_tag, attributes], values, end_tag] ->
       case start_tag do
-        ^end_tag -> %Tag{name: start_tag,
-                         attributes: Enum.into(attributes, %{}),
-                         value: contents}
+        ^end_tag ->
+            %Tag{name: start_tag,
+                 attributes: Enum.into(attributes, %{}),
+                 value: Enum.filter(values, fn val -> val != "" end)
+            }
         _ -> {:error, "XML tags do not line up! Start tag: #{start_tag}, end tag: #{end_tag}."}
       end
     end)
   end
 
+  # Laziness needed due to recursive nature of XML.
+  defp xml_nested_parser(), do: lazy(fn -> xml_body_parser() end)
+
   def string_parser() do
     choice([xml_char(), ignore(comment_parser())])
-    |> many()
+    |> many1()
     |> map(&Enum.join/1)
   end
 
@@ -115,9 +124,7 @@ defmodule XML.Parser do
     |> map(fn results -> results |> Enum.into("") end)
   end
 
-  defp between_quotes(parser) do
-    between(char("\""), parser, char("\""))
-  end
+  defp between_quotes(parser), do: between(char("\""), parser, char("\""))
 
   defp word_(), do: lexeme(word())
 
@@ -125,5 +132,7 @@ defmodule XML.Parser do
 
   defp char_(c), do: lexeme(char(c))
 
-  defp lexeme(parser), do: pair_left(parser, skip(spaces()))
+  defp lexeme(parser), do: pair_left(parser, skip_many(whitespace()))
+
+  defp whitespace(), do: choice([space(), newline()])
 end

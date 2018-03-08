@@ -6,7 +6,7 @@ defmodule XML.Tag do
   @type t :: %__MODULE__{
     name: String.t(),
     attributes: %{},
-    value: %__MODULE__{} | String.t() | nil
+    value: [%__MODULE__{} | String.t()] | nil
   }
 
   defstruct [:name, :attributes, :value]
