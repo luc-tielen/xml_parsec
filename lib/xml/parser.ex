@@ -61,7 +61,7 @@ defmodule XML.Parser do
         ^end_tag ->
             %Tag{name: start_tag,
                  attributes: Enum.into(attributes, %{}),
-                 value: Enum.filter(values, fn val -> val != "" end)
+                 values: Enum.filter(values, fn val -> val != "" end)
             }
         _ -> {:error, "XML tags do not line up! Start tag: #{start_tag}, end tag: #{end_tag}."}
       end

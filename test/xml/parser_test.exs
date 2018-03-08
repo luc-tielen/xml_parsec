@@ -9,68 +9,68 @@ defmodule XML.Parser.Test do
   test "parsing XML documents" do
     assert parse_xml_doc("<?xml version=\"1.0\" encoding=\"UTF-8\"?><a/>")
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{name: "a", value: nil, attributes: %{}}}
+              body: %Tag{name: "a", values: nil, attributes: %{}}}
     assert parse_xml_doc("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n <a/>")
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{name: "a", value: nil, attributes: %{}}}
+              body: %Tag{name: "a", values: nil, attributes: %{}}}
     assert parse_xml_doc("<?xml version=\"1.0\" encoding=\"UTF-8\"?><a></a>")
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{name: "a", value: [], attributes: %{}}}
+              body: %Tag{name: "a", values: [], attributes: %{}}}
     assert parse_xml_doc("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n <a></a>")
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{name: "a", value: [], attributes: %{}}}
+              body: %Tag{name: "a", values: [], attributes: %{}}}
     assert parse_xml_doc(File.read!("test/fixtures/fixture3.xml"))
       == {:error, "Expected `<?xml`, but was not found at line 1, column 0."}
     assert parse_xml_doc(File.read!("test/fixtures/fixture2.xml"))
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{attributes: %{}, name: "root", value: [
+              body: %Tag{attributes: %{}, name: "root", values: [
                 "\n  ",
-                %Tag{attributes: %{}, name: "child", value: [
+                %Tag{attributes: %{}, name: "child", values: [
                   "\n    ",
-                  %Tag{attributes: %{}, name: "subchild", value: ["content"]},
+                  %Tag{attributes: %{}, name: "subchild", values: ["content"]},
                   "\n    ",
-                  %Tag{attributes: %{}, name: "tag_without_content", value: nil},
+                  %Tag{attributes: %{}, name: "tag_without_content", values: nil},
                   "\n  "
                 ]},
                 "\n"
               ]}}
     assert parse_xml_doc(File.read!("test/fixtures/fixture1.xml"))
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{attributes: %{}, name: "shiporder", value: [
+              body: %Tag{attributes: %{}, name: "shiporder", values: [
                 "\n",
-                %Tag{attributes: %{}, name: "orderperson", value: ["John Smith"]},
+                %Tag{attributes: %{}, name: "orderperson", values: ["John Smith"]},
                 "\n",
-                %Tag{attributes: %{}, name: "shipto", value: [
+                %Tag{attributes: %{}, name: "shipto", values: [
                   "\n  ",
-                  %Tag{attributes: %{}, name: "name", value: ["Ola Nordmann"]},
+                  %Tag{attributes: %{}, name: "name", values: ["Ola Nordmann"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "address", value: ["Langgt 23"]},
+                  %Tag{attributes: %{}, name: "address", values: ["Langgt 23"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "city", value: ["4000 Stavanger"]},
+                  %Tag{attributes: %{}, name: "city", values: ["4000 Stavanger"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "country", value: ["Norway"]},
+                  %Tag{attributes: %{}, name: "country", values: ["Norway"]},
                   "\n"
                 ]},
                 "\n",
-                %Tag{attributes: %{}, name: "item", value: [
+                %Tag{attributes: %{}, name: "item", values: [
                   "\n  ",
-                  %Tag{attributes: %{}, name: "title", value: ["Empire Burlesque"]},
+                  %Tag{attributes: %{}, name: "title", values: ["Empire Burlesque"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "note", value: ["Special Edition"]},
+                  %Tag{attributes: %{}, name: "note", values: ["Special Edition"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "quantity", value: ["1"]},
+                  %Tag{attributes: %{}, name: "quantity", values: ["1"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "price", value: ["10.90"]},
+                  %Tag{attributes: %{}, name: "price", values: ["10.90"]},
                   "\n"
                 ]},
                 "\n",
-                %Tag{attributes: %{}, name: "item", value: [
+                %Tag{attributes: %{}, name: "item", values: [
                   "\n  ",
-                  %Tag{attributes: %{}, name: "title", value: ["Hide your heart"]},
+                  %Tag{attributes: %{}, name: "title", values: ["Hide your heart"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "quantity", value: ["1"]},
+                  %Tag{attributes: %{}, name: "quantity", values: ["1"]},
                   "\n  ",
-                  %Tag{attributes: %{}, name: "price", value: ["9.90"]},
+                  %Tag{attributes: %{}, name: "price", values: ["9.90"]},
                   "\n"
                 ]},
                 "\n"
@@ -83,27 +83,27 @@ defmodule XML.Parser.Test do
       == {:error, "Expected at least one parser to succeed at line 1, column 0."}
     assert parse_xml_body("<xml>")
       == {:error, "Expected at least one parser to succeed at line 1, column 0."}
-    assert parse_xml_body("<xml></xml>") == %Tag{attributes: %{}, name: "xml", value: []}
-    assert parse_xml_body("<xml/>") == %Tag{attributes: %{}, name: "xml", value: nil}
+    assert parse_xml_body("<xml></xml>") == %Tag{attributes: %{}, name: "xml", values: []}
+    assert parse_xml_body("<xml/>") == %Tag{attributes: %{}, name: "xml", values: nil}
     assert parse_xml_body("<xml><tag a=\"1\"/></xml>")
       == %Tag{attributes: %{}, name: "xml",
-              value: [%Tag{attributes: %{"a" => "1"}, name: "tag", value: nil}]}
+              values: [%Tag{attributes: %{"a" => "1"}, name: "tag", values: nil}]}
     assert parse_xml_body("<a>\n<b/>\n<c/>\n</a>")
       == %Tag{attributes: %{}, name: "a",
-              value: [
+              values: [
                 "\n",
-                %Tag{name: "b", attributes: %{}, value: nil},
+                %Tag{name: "b", attributes: %{}, values: nil},
                 "\n",
-                %Tag{name: "c", attributes: %{}, value: nil},
+                %Tag{name: "c", attributes: %{}, values: nil},
                 "\n",
               ]}
     assert parse_xml_body("<a>\n<b></b>\n<c>d</c>\n</a>")
       == %Tag{attributes: %{}, name: "a",
-              value: [
+              values: [
                 "\n",
-                %Tag{name: "b", attributes: %{}, value: []},
+                %Tag{name: "b", attributes: %{}, values: []},
                 "\n",
-                %Tag{name: "c", attributes: %{}, value: ["d"]},
+                %Tag{name: "c", attributes: %{}, values: ["d"]},
                 "\n",
               ]}
   end
@@ -155,41 +155,41 @@ defmodule XML.Parser.Test do
 
   test "parsing XML tags without content" do
     assert parse_tag_no_content("<tag1/>")
-        == %Tag{name: "tag1", attributes: %{}, value: nil}
+        == %Tag{name: "tag1", attributes: %{}, values: nil}
     assert parse_tag_no_content("<tag2 a=\"b\"/>")
-        == %Tag{name: "tag2", attributes: %{"a" => "b"}, value: nil}
+        == %Tag{name: "tag2", attributes: %{"a" => "b"}, values: nil}
     assert parse_tag_no_content("<tag3 a=\"b\" c=\"de\"/>")
-        == %Tag{name: "tag3", attributes: %{"a" => "b", "c" => "de"}, value: nil}
+        == %Tag{name: "tag3", attributes: %{"a" => "b", "c" => "de"}, values: nil}
   end
 
   test "parsing XML tags with content" do
     assert parse_tag_with_content("<tag1></tag1>")
-        == %Tag{name: "tag1", attributes: %{}, value: []}
+        == %Tag{name: "tag1", attributes: %{}, values: []}
     assert parse_tag_with_content("<tag2 a=\"b\"   ></tag2>")
-        == %Tag{name: "tag2", attributes: %{"a" => "b"}, value: []}
+        == %Tag{name: "tag2", attributes: %{"a" => "b"}, values: []}
     assert parse_tag_with_content("<tag3 a=\"b\" c=\"de\">   a b    c   </tag3>")
         == %Tag{name: "tag3", attributes: %{"a" => "b", "c" => "de"},
-                value: ["   a b    c   "]}
+                values: ["   a b    c   "]}
     assert parse_tag_with_content("<tag4 a=\"b\" c=\"de\"></tag5>")
         == {:error, xml_err("tag4", "tag5")}
     assert parse_tag_with_content("<tag6 a=\"b\" c=\"de\"><tag7/></tag6>")
         == %Tag{name: "tag6",
                 attributes: %{"a" => "b", "c" => "de"},
-                value: [%Tag{name: "tag7", attributes: %{}}]}
+                values: [%Tag{name: "tag7", attributes: %{}}]}
     assert parse_tag_with_content("<tag8 a=\"b\" c=\"de\"><tag9></tag9></tag8     >")
         == %Tag{name: "tag8",
                 attributes: %{"a" => "b", "c" => "de"},
-                value: [%Tag{name: "tag9", attributes: %{}, value: []}]}
+                values: [%Tag{name: "tag9", attributes: %{}, values: []}]}
     assert parse_tag_with_content("<tag10>\n <tag11/></tag10>")
       == %Tag{name: "tag10", attributes: %{},
-              value: ["\n ", %Tag{name: "tag11", value: nil, attributes: %{}}]}
+              values: ["\n ", %Tag{name: "tag11", values: nil, attributes: %{}}]}
     assert parse_tag_with_content("<tag10>\n a<tag11/></tag10>")
       == %Tag{name: "tag10", attributes: %{},
-              value: ["\n a", %Tag{name: "tag11", value: nil, attributes: %{}}]}
+              values: ["\n a", %Tag{name: "tag11", values: nil, attributes: %{}}]}
     assert parse_tag_with_content("<tag12><tag13/><tag14/></tag12>")
-      == %Tag{name: "tag12", attributes: %{}, value: [
-        %Tag{name: "tag13", attributes: %{}, value: nil},
-        %Tag{name: "tag14", attributes: %{}, value: nil}
+      == %Tag{name: "tag12", attributes: %{}, values: [
+        %Tag{name: "tag13", attributes: %{}, values: nil},
+        %Tag{name: "tag14", attributes: %{}, values: nil}
       ]}
   end
 

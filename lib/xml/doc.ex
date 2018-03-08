@@ -9,7 +9,7 @@ defmodule XML.Doc do
     version: String.t(),
     encoding: String.t(),
     standalone: true | false,
-    body: %__MODULE__{} | String.t() | nil
+    body: %Tag{}
   }
 
   defstruct [:version, :encoding, :standalone, :body]
