@@ -36,7 +36,11 @@ defmodule XML.Parser.Test do
               ]}}
     assert parse_xml_doc(File.read!("test/fixtures/fixture1.xml"))
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",
-              body: %Tag{attributes: %{}, name: "shiporder", values: [
+              body: %Tag{attributes: %{"orderid" => "889923",
+                                       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+                                       "xsi:noNamespaceSchemaLocation" => "shiporder.xsd"},
+                          name: "shiporder",
+                          values: [
                 "\n",
                 %Tag{attributes: %{}, name: "orderperson", values: ["John Smith"]},
                 "\n",

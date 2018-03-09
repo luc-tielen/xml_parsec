@@ -103,12 +103,12 @@ defmodule XML.Parser do
     |> label("header attribute key")
   end
 
-  defp attr_key(), do: label(word(), "attribute key")
+  defp attr_key(), do: word_of(~r/[\w._\-:]+/) |> label("attribute key")
 
   defp attr_value() do
     char()
     |> none_of(["\""])
-    |> many
+    |> many()
     |> label("attribute value")
     |> map(&Enum.join/1)
   end
