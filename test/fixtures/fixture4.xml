@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+          targetNamespace="http://example.com/stockquote.wsdl"
+          xmlns:tns="http://example.com/stockquote.wsdl"
+          xmlns:xsd1="http://example.com/stockquote.xsd"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <message name="SubscribeToQuotes">
+        <part name="body" element="xsd1:SubscribeToQuotes"/>
+        <part name="subscribeheader" element="xsd1:SubscriptionHeader"/>
+    </message>
+
+    <portType name="StockQuotePortType">
+        <operation name="SubscribeToQuotes">
+           <input message="tns:SubscribeToQuotes"/>
+        </operation>
+    </portType>
+    <types>
+        <schema targetNamespace="http://example.com/stockquote.xsd"
+               xmlns="http://www.w3.org/2000/10/XMLSchema">
+           <element name="SubscribeToQuotes">
+               <complexType>
+                   <all>
+                       <element name="tickerSymbol" type="string"/>
+                   </all>
+               </complexType>
+           </element>
+           <element name="SubscriptionHeader" type="uriReference"/>
+        </schema>
+      </types>
+    <service name="StockQuoteService">
+        <port name="StockQuotePort" binding="tns:StockQuoteSoap">
+           <soap:address location="mailto:subscribe@example.com"/>
+        </port>
+    </service>
+
+</definitions>

@@ -79,6 +79,162 @@ defmodule XML.Parser.Test do
                 ]},
                 "\n"
               ]}}
+
+    assert parse_xml_doc(File.read!("test/fixtures/fixture4.xml"))
+      == %XML.Doc{body: %XML.Tag{
+                  attributes: %{
+                    "name" => "StockQuote",
+                    "targetNamespace" => "http://example.com/stockquote.wsdl",
+                    "xmlns" => "http://schemas.xmlsoap.org/wsdl/",
+                    "xmlns:soap" => "http://schemas.xmlsoap.org/wsdl/soap/",
+                    "xmlns:tns" => "http://example.com/stockquote.wsdl",
+                    "xmlns:xsd1" => "http://example.com/stockquote.xsd"
+                  },
+                  name: "definitions",
+                  values: [
+                    "\n\n    ",
+                    %XML.Tag{
+                      attributes: %{"name" => "SubscribeToQuotes"},
+                      name: "message",
+                      values: [
+                        "\n        ",
+                        %XML.Tag{
+                          attributes: %{
+                            "element" => "xsd1:SubscribeToQuotes",
+                            "name" => "body"
+                          },
+                          name: "part",
+                          values: nil
+                        },
+                        "\n        ",
+                        %XML.Tag{
+                          attributes: %{
+                            "element" => "xsd1:SubscriptionHeader",
+                            "name" => "subscribeheader"
+                          },
+                          name: "part",
+                          values: nil
+                        },
+                        "\n    "
+                      ]
+                    },
+                    "\n\n    ",
+                    %XML.Tag{
+                      attributes: %{"name" => "StockQuotePortType"},
+                      name: "portType",
+                      values: [
+                        "\n        ",
+                        %XML.Tag{
+                          attributes: %{"name" => "SubscribeToQuotes"},
+                          name: "operation",
+                          values: [
+                            "\n           ",
+                            %XML.Tag{
+                              attributes: %{"message" => "tns:SubscribeToQuotes"},
+                              name: "input",
+                              values: nil
+                            },
+                            "\n        "
+                          ]
+                        },
+                        "\n    "
+                      ]
+                    },
+                    "\n    ",
+                    %XML.Tag{
+                      attributes: %{},
+                      name: "types",
+                      values: [
+                        "\n        ",
+                        %XML.Tag{
+                          attributes: %{
+                            "targetNamespace" => "http://example.com/stockquote.xsd",
+                            "xmlns" => "http://www.w3.org/2000/10/XMLSchema"
+                          },
+                          name: "schema",
+                          values: [
+                            "\n           ",
+                            %XML.Tag{
+                              attributes: %{"name" => "SubscribeToQuotes"},
+                              name: "element",
+                              values: [
+                                "\n               ",
+                                %XML.Tag{
+                                  attributes: %{},
+                                  name: "complexType",
+                                  values: [
+                                    "\n                   ",
+                                    %XML.Tag{
+                                      attributes: %{},
+                                      name: "all",
+                                      values: [
+                                        "\n                       ",
+                                        %XML.Tag{
+                                          attributes: %{
+                                            "name" => "tickerSymbol",
+                                            "type" => "string"
+                                          },
+                                          name: "element",
+                                          values: nil
+                                        },
+                                        "\n                   "
+                                      ]
+                                    },
+                                    "\n               "
+                                  ]
+                                },
+                                "\n           "
+                              ]
+                            },
+                            "\n           ",
+                            %XML.Tag{
+                              attributes: %{
+                                "name" => "SubscriptionHeader",
+                                "type" => "uriReference"
+                              },
+                              name: "element",
+                              values: nil
+                            },
+                            "\n        "
+                          ]
+                        },
+                        "\n      "
+                      ]
+                    },
+                    "\n    ",
+                    %XML.Tag{
+                      attributes: %{"name" => "StockQuoteService"},
+                      name: "service",
+                      values: [
+                        "\n        ",
+                        %XML.Tag{
+                          attributes: %{
+                            "binding" => "tns:StockQuoteSoap",
+                            "name" => "StockQuotePort"
+                          },
+                          name: "port",
+                          values: [
+                            "\n           ",
+                            %XML.Tag{
+                              attributes: %{
+                                "location" => "mailto:subscribe@example.com"
+                              },
+                              name: "soap:address",
+                              values: nil
+                            },
+                            "\n        "
+                          ]
+                        },
+                        "\n    "
+                      ]
+                    },
+                    "\n\n"
+                  ]
+      },
+      encoding: "",
+      standalone: "yes",
+      version: "1.0"
+      }
   end
 
   test "parsing XML body" do

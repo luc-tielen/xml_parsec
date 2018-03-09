@@ -79,7 +79,9 @@ defmodule XML.Parser do
 
   defp xml_char(), do: char() |> none_of(["<", ">", "&"])
 
-  defp tag(), do: label(word_(), "tag name")
+  defp xml_name(), do: word_of(~r/[\w._1-9\-:]+/)
+
+  defp tag(), do: lexeme(xml_name()) |> label("tag name")
 
   def header_attribute() do
     sequence([ lexeme(header_attr_key()),
@@ -103,7 +105,7 @@ defmodule XML.Parser do
     |> label("header attribute key")
   end
 
-  defp attr_key(), do: word_of(~r/[\w._\-:]+/) |> label("attribute key")
+  defp attr_key(), do: xml_name() |> label("attribute key")
 
   defp attr_value() do
     char()
