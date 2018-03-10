@@ -7,8 +7,8 @@ defmodule XML.Parser do
 
   def parse(xml) do
     case Combine.parse(xml, xml_doc_parser()) do
-      [result] -> result
       {:error, _} = err -> err
+      [result] -> {:ok, result}
     end
   end
 
