@@ -5,7 +5,12 @@ defmodule XML.Parser do
   alias XML.Tag
 
 
-  def parse(xml), do: Combine.parse(xml, xml_doc_parser())
+  def parse(xml) do
+    case Combine.parse(xml, xml_doc_parser()) do
+      [result] -> result
+      {:error, _} = err -> err
+    end
+  end
 
   def xml_doc_parser() do
     sequence([skip_many(whitespace()),

@@ -355,7 +355,7 @@ defmodule XML.Parser.Test do
 
   defp xml_err(tag1, tag2), do: "XML tags do not line up! Start tag: #{tag1}, end tag: #{tag2}."
 
-  defp parse_xml_doc(x), do: run_parser(x, Parser.xml_doc_parser())
+  defp parse_xml_doc(x), do: Parser.parse(x)
   defp parse_xml_body(x), do: run_parser(x, Parser.xml_body_parser())
   defp parse_xml_header(x), do: run_parser(x, Parser.xml_header_parser())
   defp parse_comment(x), do: run_parser(x, Parser.comment_parser())
