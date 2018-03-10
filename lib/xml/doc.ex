@@ -1,5 +1,6 @@
 defmodule XML.Doc do
   alias XML.Tag
+  import Lens
 
   @moduledoc """
   Module containing struct representing a complete XML document.
@@ -12,5 +13,5 @@ defmodule XML.Doc do
     body: %Tag{}
   }
 
-  defstruct [:version, :encoding, :standalone, :body]
+  deflenses [:version, :encoding, :standalone, :body]
 end

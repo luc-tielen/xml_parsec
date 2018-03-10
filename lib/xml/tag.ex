@@ -1,4 +1,6 @@
 defmodule XML.Tag do
+  import Lens
+
   @moduledoc """
   Module containing struct representing an example tag.
   """
@@ -9,5 +11,5 @@ defmodule XML.Tag do
     values: [%__MODULE__{} | String.t()] | nil
   }
 
-  defstruct [:name, :attributes, :values]
+  deflenses [:name, :attributes, :values]
 end

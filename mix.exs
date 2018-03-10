@@ -20,6 +20,7 @@ defmodule XmlParsec.MixProject do
   defp deps do
     [
       {:combine, "~> 0.10.0"},
+      {:focus, "~> 0.3.5"},
       {:mix_test_watch, "~> 0.5", only: :dev, runtime: false}
     ]
   end
