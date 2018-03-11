@@ -1,6 +1,6 @@
 # XmlParsec
 
-**TODO: Add description**
+XmlParsec is a library based on [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator), written in pure Elixir.
 
 ## Installation
 
