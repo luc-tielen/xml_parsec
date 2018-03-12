@@ -8,4 +8,7 @@ clean:
 test:
 	mix test.watch
 
-.PHONY:  build clean test
+lint:
+	mix credo --strict
+
+.PHONY:  build clean test lint

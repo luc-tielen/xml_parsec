@@ -8,7 +8,8 @@ otp_release:
   - 20.0
 
 script:
-  - mix deps.get
+  - mix do deps.get, deps.compile
+  - mix credo
   - mix test
 
 sudo: false
