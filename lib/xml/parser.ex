@@ -40,7 +40,7 @@ defmodule XML.Parser do
   end
 
   def xml_body_parser() do
-    choice([ tag_no_content_parser(), tag_with_content_parser()])
+    choice([tag_no_content_parser(), tag_with_content_parser()])
   end
 
   defp tag_with_attrs(), do: sequence([tag(), many(attribute())])
