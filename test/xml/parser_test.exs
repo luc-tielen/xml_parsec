@@ -1,7 +1,6 @@
 defmodule XML.Parser.Test do
   use ExUnit.Case, async: true
-  use Combine
-  alias XML.Parser
+  alias XML.Parser.Internal, as: Parser
   alias XML.Doc
   alias XML.Tag
 
