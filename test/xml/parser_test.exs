@@ -4,7 +4,6 @@ defmodule XML.Parser.Test do
   alias XML.Doc
   alias XML.Tag
 
-
   test "parsing XML documents" do
     assert parse_xml_doc("<?xml version=\"1.0\" encoding=\"UTF-8\"?><a/>")
       == %Doc{version: "1.0", encoding: "UTF-8", standalone: "yes",

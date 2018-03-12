@@ -48,7 +48,7 @@ defmodule XML.Parser.Internal do
   Creates a parser that can parse an entire XML document, including XML prolog.
   """
   @spec xml_doc_parser() :: parser
-  def xml_doc_parser() do
+  def xml_doc_parser do
     [skip_many(whitespace()), lexeme(xml_header_parser()), xml_body_parser()]
     |> sequence()
     |> map(fn [header, body] ->
@@ -65,7 +65,7 @@ defmodule XML.Parser.Internal do
   Creates a parser that can parse the XML prolog.
   """
   @spec xml_header_parser() :: parser
-  def xml_header_parser() do
+  def xml_header_parser do
     between(string_("<?xml"), many(header_attribute()), string_("?>"))
     |> map(fn attributes ->
       attr_map = Enum.into(attributes, %{})
@@ -81,27 +81,27 @@ defmodule XML.Parser.Internal do
   Creates a parser that can parse a top level XML tag.
   """
   @spec xml_body_parser() :: parser
-  def xml_body_parser() do
+  def xml_body_parser do
     choice([tag_no_content_parser(), tag_with_content_parser()])
   end
 
   @doc false
   @spec tag_with_attrs() :: parser
-  defp tag_with_attrs(), do: sequence([tag(), many(attribute())])
+  defp tag_with_attrs, do: sequence([tag(), many(attribute())])
 
   @doc false
   @spec start_tag_parser() :: parser
-  defp start_tag_parser(), do: between(char("<"), tag_with_attrs(), char(">"))
+  defp start_tag_parser, do: between(char("<"), tag_with_attrs(), char(">"))
 
   @doc false
   @spec end_tag_parser() :: parser
-  defp end_tag_parser(), do: between(string("</"), word_(), char(">"))
+  defp end_tag_parser, do: between(string("</"), word_(), char(">"))
 
   @doc """
   Parses an XML tag with no inner contents (e.g. <tag a="1" b="2"/>).
   """
   @spec tag_no_content_parser :: parser
-  def tag_no_content_parser() do
+  def tag_no_content_parser do
     between(char("<"), tag_with_attrs(), string("/>"))
     |> map(fn [tag, attributes] ->
       %Tag{name: tag, attributes: Enum.into(attributes, %{})}
@@ -112,7 +112,7 @@ defmodule XML.Parser.Internal do
   Parses an XML tag with inner contents (e.g. <tag1 x="123"><tag2>contents</tag2></tag1>).
   """
   @spec tag_with_content_parser :: parser
-  def tag_with_content_parser() do
+  def tag_with_content_parser do
     contents_parser = many(choice([xml_nested_parser(), string_parser()]))
     [start_tag_parser(), contents_parser, end_tag_parser()]
     |> sequence()
@@ -131,13 +131,13 @@ defmodule XML.Parser.Internal do
   # NOTE: Laziness needed due to recursive nature of XML.
   @doc false
   @spec xml_nested_parser() :: parser
-  defp xml_nested_parser(), do: lazy(fn -> xml_body_parser() end)
+  defp xml_nested_parser, do: lazy(fn -> xml_body_parser() end)
 
   @doc """
   Parses a string in an XML document.
   """
   @spec string_parser() :: parser
-  def string_parser() do
+  def string_parser do
     [xml_char(), ignore(comment_parser())]
     |> choice()
     |> many1()
@@ -146,21 +146,21 @@ defmodule XML.Parser.Internal do
 
   @doc false
   @spec xml_char() :: parser
-  defp xml_char(), do: char() |> none_of(["<", ">", "&"])
+  defp xml_char, do: char() |> none_of(["<", ">", "&"])
 
   @doc false
   @spec xml_name() :: parser
-  defp xml_name(), do: word_of(~r/[\w._1-9\-:]+/)
+  defp xml_name, do: word_of(~r/[\w._1-9\-:]+/)
 
   @doc false
   @spec tag() :: parser
-  defp tag(), do: xml_name() |> lexeme() |> label("tag name")
+  defp tag, do: xml_name() |> lexeme() |> label("tag name")
 
   @doc """
   Parses attribute (key / value) pair used in the XML prolog.
   """
   @spec header_attribute() :: parser
-  def header_attribute() do
+  def header_attribute do
     [lexeme(header_attr_key()),
      ignore(char_("=")),
      lexeme(attr_value() |> between_quotes())]
@@ -172,7 +172,7 @@ defmodule XML.Parser.Internal do
   Parses an attribute (key + value) inside an XML tag.
   """
   @spec attribute() :: parser
-  def attribute() do
+  def attribute do
     [lexeme(attr_key()),
      ignore(char_("=")),
      lexeme(attr_value() |> between_quotes())]
@@ -182,7 +182,7 @@ defmodule XML.Parser.Internal do
 
   @doc false
   @spec header_attr_key() :: parser
-  defp header_attr_key() do
+  defp header_attr_key do
     word()
     |> one_of(["version", "encoding", "standalone"])
     |> label("header attribute key")
@@ -190,11 +190,11 @@ defmodule XML.Parser.Internal do
 
   @doc false
   @spec attr_key() :: parser
-  defp attr_key(), do: xml_name() |> label("attribute key")
+  defp attr_key, do: xml_name() |> label("attribute key")
 
   @doc false
   @spec attr_value() :: parser
-  defp attr_value() do
+  defp attr_value do
     char()
     |> none_of(["\""])
     |> many()
@@ -206,7 +206,7 @@ defmodule XML.Parser.Internal do
   Parses an XML comment.
   """
   @spec comment_parser() :: parser
-  def comment_parser() do
+  def comment_parser do
     # NOTE: weird construction since no way to create 'nothing' parser?
     close_comment = char("-") |> followed_by(string("->"))
     comment = close_comment
@@ -223,7 +223,7 @@ defmodule XML.Parser.Internal do
 
   @doc false
   @spec word_() :: parser
-  defp word_(), do: lexeme(word())
+  defp word_, do: lexeme(word())
 
   @doc false
   @spec string_(String.t) :: parser
@@ -239,5 +239,5 @@ defmodule XML.Parser.Internal do
 
   @doc false
   @spec whitespace() :: parser
-  defp whitespace(), do: choice([space(), newline()])
+  defp whitespace, do: choice([space(), newline()])
 end
