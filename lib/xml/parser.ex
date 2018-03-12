@@ -49,10 +49,8 @@ defmodule XML.Parser.Internal do
   """
   @spec xml_doc_parser() :: parser
   def xml_doc_parser() do
-    sequence([skip_many(whitespace()),
-              lexeme(xml_header_parser()),
-              xml_body_parser()
-             ])
+    [skip_many(whitespace()), lexeme(xml_header_parser()), xml_body_parser()]
+    |> sequence()
     |> map(fn [header, body] ->
       %Doc{
         version: Map.get(header, "version", ""),
@@ -116,10 +114,8 @@ defmodule XML.Parser.Internal do
   @spec tag_with_content_parser :: parser
   def tag_with_content_parser() do
     contents_parser = many(choice([xml_nested_parser(), string_parser()]))
-    sequence([start_tag_parser(),
-              contents_parser,
-              end_tag_parser()
-             ])
+    [start_tag_parser(), contents_parser, end_tag_parser()]
+    |> sequence()
     |> map(fn [[start_tag, attributes], values, end_tag] ->
       case start_tag do
         ^end_tag ->
@@ -142,7 +138,8 @@ defmodule XML.Parser.Internal do
   """
   @spec string_parser() :: parser
   def string_parser() do
-    choice([xml_char(), ignore(comment_parser())])
+    [xml_char(), ignore(comment_parser())]
+    |> choice()
     |> many1()
     |> map(&Enum.join/1)
   end
@@ -157,17 +154,17 @@ defmodule XML.Parser.Internal do
 
   @doc false
   @spec tag() :: parser
-  defp tag(), do: lexeme(xml_name()) |> label("tag name")
+  defp tag(), do: xml_name() |> lexeme() |> label("tag name")
 
   @doc """
   Parses attribute (key / value) pair used in the XML prolog.
   """
   @spec header_attribute() :: parser
   def header_attribute() do
-    sequence([ lexeme(header_attr_key()),
-               ignore(char_("=")),
-               lexeme(attr_value() |> between_quotes())
-             ])
+    [lexeme(header_attr_key()),
+     ignore(char_("=")),
+     lexeme(attr_value() |> between_quotes())]
+    |> sequence()
     |> map(&List.to_tuple/1)
   end
 
@@ -176,10 +173,10 @@ defmodule XML.Parser.Internal do
   """
   @spec attribute() :: parser
   def attribute() do
-    sequence([ lexeme(attr_key()),
-               ignore(char_("=")),
-               lexeme(attr_value() |> between_quotes())
-             ])
+    [lexeme(attr_key()),
+     ignore(char_("=")),
+     lexeme(attr_value() |> between_quotes())]
+    |> sequence()
     |> map(&List.to_tuple/1)
   end
 
