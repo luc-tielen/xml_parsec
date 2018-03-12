@@ -1,5 +1,7 @@
 # XmlParsec
 
+[![Build Status](https://travis-ci.org/luc-tielen/xml_parsec.svg?branch=master)](https://travis-ci.org/luc-tielen/xml_parsec)
+
 XmlParsec is a library based on [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator), written in pure Elixir.
 
 ## Installation
