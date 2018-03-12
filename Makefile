@@ -11,4 +11,7 @@ test:
 lint:
 	mix credo --strict
 
+dialyzer:
+	mix dialyzer
+
 .PHONY:  build clean test lint
