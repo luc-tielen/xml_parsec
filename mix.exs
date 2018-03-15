@@ -14,6 +14,13 @@ defmodule XmlParsec.MixProject do
       description: description(),
       package: package(),
       source_url: @github_url,
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+      ],
     ]
   end
 
@@ -23,6 +30,7 @@ defmodule XmlParsec.MixProject do
     [
       {:combine, "~> 0.10.0"},
       {:focus, "~> 0.3.5"},
+      {:excoveralls, "~> 0.8", only: :test, runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: :false},
