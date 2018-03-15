@@ -1,21 +1,23 @@
 defmodule XmlParsec.MixProject do
   use Mix.Project
 
+  @github_url "https://github.com/luc-tielen/xml_parsec"
+
+
   def project do
     [
       app: :xml_parsec,
       version: "0.1.0",
       elixir: ">= 1.4.0",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package(),
+      source_url: @github_url,
     ]
   end
 
-  def application do
-    [
-      extra_applications: [:logger]
-    ]
-  end
+  def application, do: []
 
   defp deps do
     [
@@ -25,6 +27,21 @@ defmodule XmlParsec.MixProject do
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: :false},
       {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+    ]
+  end
+
+  defp description do
+    ~S"""
+    XmlParsec is a library based on [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator),
+    written in pure Elixir.
+    """
+  end
+
+  defp package do
+    [
+      maintainers: ["Luc Tielen"],
+      licenses: ["MIT"],
+      links: %{"github" => @github_url}
     ]
   end
 end
