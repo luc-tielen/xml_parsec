@@ -21,6 +21,7 @@ defmodule XmlParsec.MixProject do
     [
       {:combine, "~> 0.10.0"},
       {:focus, "~> 0.3.5"},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: :false},
       {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},

@@ -14,4 +14,7 @@ lint:
 dialyzer:
 	mix dialyzer
 
-.PHONY:  build clean test lint
+docs:
+	mix docs
+
+.PHONY:  build clean test lint dialyzer docs
