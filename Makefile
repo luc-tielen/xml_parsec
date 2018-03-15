@@ -17,4 +17,7 @@ dialyzer:
 docs:
 	mix docs
 
-.PHONY:  build clean test lint dialyzer docs
+coverage:
+	mix coveralls.detail
+
+.PHONY:  build clean test lint dialyzer docs coverage
